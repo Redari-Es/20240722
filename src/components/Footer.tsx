@@ -34,9 +34,9 @@ const Footer = () => (
             <div className='xl:grid xl:grid-cols-3 sm:gap-8 xl:gap-8'>
                 <div className='space-y-8'>
                     <Image
-                        src="/favicon.ico"
-                        width={64}
-                        height={64}
+                        src="/favicon.png"
+                        width={50}
+                        height={50}
                         alt='PDF.ai logo' />
                     <p className='leading-6 text-gray-600 text-sm'>
                         Chat with any PDF: ask questions, get summaries, find information, and more.
