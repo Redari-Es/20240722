@@ -1,13 +1,28 @@
 "use client"
-export default function FileUpload() {
-    const handleFileUpload = (e: any) => {
-        const file = e.target.files[0];
+
+
+type Props = {
+    onFileUpload: any
+    setFile: any
+}
+export default function FileUpload({ onFileUpload, setFile }: Props) {
+
+    const handleFileUpload = async (e: any) => {
+        const file = e.target.files?.[0];
         if (file && file.type === 'application/pdf') {
             // 处理文件上传逻辑
             console.log('File uploaded:', file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const pdf = (reader.result as string);
+                setFile(pdf)
+            };
+            reader.readAsDataURL(file);
+            // setPdfFile(file)
         } else {
             alert('Please select a PDF file.');
         }
+        onFileUpload(file)
     };
 
     return (
