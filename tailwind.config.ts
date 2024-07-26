@@ -16,6 +16,9 @@ const config: Config = {
       '3xl': '1800px', 
     },
     extend: {
+      tracking: {
+        'extra-tighter':'-0.1em',
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

@@ -1,5 +1,6 @@
 # 20240722
 ## 详细步骤说明
+> bun add @react-pdf/render
 ## 运行网页
 > bun dev
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
