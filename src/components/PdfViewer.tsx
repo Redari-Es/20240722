@@ -9,7 +9,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 
 
-const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages, degree }) => {
+const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }) => {
     const [showPages, setShowPages] = useState(false)
     // 监听文件变化，重新加载 PDF
     useEffect(() => {
