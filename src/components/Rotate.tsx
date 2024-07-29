@@ -85,14 +85,14 @@ const Rotate = ({ file, setFile, setIsFileUpload, fileName }: Props) => {
                         <button className='p-2 rounded border bg-orange-500'
                             onClick={rotateAllPages}
                         >
-                            <span className='text-white text-base text-nowrap'>Rotate all</span>
+                            <span className='text-white text-md text-nowrap'>Rotate all</span>
                         </button>
                     </Tooltips>
                     <Tooltips content='Remove this PDF and select a new one'>
                         <button className='p-2 rounded border bg-gray-900'
                             onClick={handleRemove}
                         >
-                            <span className='text-white text-base text-nowrap'>Remove PDF</span>
+                            <span className='text-white text-md text-nowrap'>Remove PDF</span>
                         </button>
                     </Tooltips>
                     <div className={`${zoomInOpacity}`}>
