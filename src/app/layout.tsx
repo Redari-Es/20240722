@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Navbar />
-        <main className="flex min-w-sm min-h-screen flex-col pt-16 scroll-smooth focus:scroll-auto mx-auto
+        <main className="flex min-w-sm min-h-screen flex-col flex-1 pt-16 scroll-smooth focus:scroll-auto mx-auto
 bg-[#f7f5ee]
         ">
           {children}
