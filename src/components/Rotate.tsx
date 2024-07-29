@@ -15,27 +15,30 @@ type Props = {
 const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
     const [scale, setScale] = useState(0.5)
     const [numPages, setNumPages] = useState<number>();
-    const [pageNumber, setPageNumber] = useState<number>(1);
-    const [rotate, setRotate] = useState<number[]>(new Array(100).fill(0));
+    const [rotate, setRotate] = useState<number[]>([])
+    // const [rotate, setRotate] = useState<number[]>(new Array(100).fill(0));
+    const [degree, setDegree] = useState(0)
 
-    // 监听文件变化，重新加载 PDF
     useEffect(() => {
-        if (file) {
-            setNumPages(0); // 重置页数
-            // 这里可以添加代码来重新加载 PDF，例如创建新的 Document 实例
-        }
-    }, [file]);
+        // 初始化 rotate 数组，确保其长度与 numPages 相等
+        setRotate(new Array(numPages).fill(0));
+    }, [numPages])
+
+    // Zoom 放大缩小
+    const minZoom = 0.1
+    const maxZoom = 0.9
+    // 根据当前的 scale 值计算按钮的亮度
+    const zoomInOpacity = scale === maxZoom ? 'opacity-50' : '';
+    const zoomOutOpacity = scale === minZoom ? 'opacity-50' : '';
 
     function zoomIn() {
         // 放大操作，但不超过1
-        setScale(Math.min(1, scale + 0.1))
-        console.log("zoomIn:", scale)
+        setScale(Math.min(maxZoom, scale + 0.1))
     }
 
     function zoomOut() {
         // 缩小操作，但不低于0.1
-        setScale(Math.max(0.1, scale - 0.1))
-        console.log("zoomOut:", scale)
+        setScale(Math.max(minZoom, scale - 0.1))
     }
 
     const handleRemove = () => {
@@ -59,6 +62,11 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
         });
     }
 
+    function rotateDegree(pageNumber: number) {
+        const degree = rotate[pageNumber - 1];
+        setDegree(degree)
+    }
+
 
     function rotateAllPages() {
         // 定义旋转的角度增量
@@ -71,55 +79,6 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
             });
             return newRotate;
         });
-    }
-
-    async function downloadPdf(file, rotate) {
-        // 加载 PDF 文档
-        const loadingTask = pdfjsLib.getDocument({ url: file });
-        const pdfDoc = await loadingTask.promise;
-        const numPages = pdfDoc.numPages;
-        const pdf = new jsPDF();
-
-        for (let i = 1; i <= numPages; i++) {
-            // 获取PDF页面
-            const page = await pdfDoc.getPage(i);
-            // 获取页面的尺寸，并设置A4尺寸的视口
-            const viewport = page.getViewport({ scale: 1.0 });
-            const scale = Math.min((595 / viewport.width), (842 / viewport.height));
-            const scaledViewport = page.getViewport({ scale: scale });
-
-            // 创建一个画布以绘制页面
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            // 根据A4尺寸设置canvas大小
-            canvas.height = Math.round(scaledViewport.height);
-            canvas.width = Math.round(scaledViewport.width);
-
-            // 渲染页面到canvas
-            const renderTask = page.render({
-                canvasContext: ctx,
-                viewport: scaledViewport
-            });
-            await renderTask.promise;
-
-            // 将canvas转换为图片
-            const imgData = canvas.toDataURL('image/png');
-            // 添加到jsPDF文档
-            pdf.addImage(imgData, 'PNG', 0, 0, scaledViewport.width, scaledViewport.height);
-
-            // 由于canvas使用了像素尺寸，可能需要调整页面添加的位置以适应A4纸大小
-            if (i % 2 === 1) {
-                // 第1页和第3页...开始新的页面
-                pdf.addPage([595, 842]);
-            } else {
-                // 第2页和第4页...在当前页面的下半部分
-                pdf.setPage(i / 2);
-            }
-        }
-
-        // 保存并下载PDF
-        pdf.save('rotated_document.pdf');
     }
 
 
@@ -142,23 +101,27 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
                             <span className='text-white text-nowrap'>Remove PDF</span>
                         </button>
                     </Tooltips>
-                    <Tooltips content='Zoom in'>
-                        <button className='rounded-full bg-white shadow-sm border p-2 hover:scale-105'
-                            onClick={zoomIn}
-                        >
-                            <ZoomIn className='size-5' />
-                        </button>
-                    </Tooltips>
-                    <Tooltips content='Zoom out'>
-                        <button className='rounded-full bg-white shadow-sm border p-2 hover:scale-105'
-                            onClick={zoomOut}
-                        >
-                            <ZoomOut className='size-5' />
-                        </button>
-                    </Tooltips>
+                    <div className={`${zoomInOpacity}`}>
+                        <Tooltips content='Zoom in'>
+                            <button className='rounded-full bg-white shadow-sm border p-2 hover:scale-105'
+                                onClick={zoomIn}
+                            >
+                                <ZoomIn className='size-5' />
+                            </button>
+                        </Tooltips>
+                    </div>
+                    <div className={`${zoomOutOpacity}`}>
+                        <Tooltips content='Zoom out'>
+                            <button className='rounded-full bg-white shadow-sm border p-2 hover:scale-105'
+                                onClick={zoomOut}
+                            >
+                                <ZoomOut className='size-5' />
+                            </button>
+                        </Tooltips>
+                    </div>
                 </div>
                 {/* Show PDF */}
-                <PdfViewer file={file} scale={scale} rotate={rotate} rotatePage={rotatePage} numPages={numPages} setNumPages={setNumPages} />
+                <PdfViewer file={file} scale={scale} rotate={rotate} rotatePage={rotatePage} numPages={numPages} setNumPages={setNumPages} degree={degree} />
                 {/* Download */}
                 <div>
                     <Tooltips content='split and download PDF'>
@@ -169,9 +132,110 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
                         </button>
                     </Tooltips>
                 </div>
-            </div>
+            </div >
         </>
     )
+}
+
+async function downloadPdf(file, rotate) {
+    // 加载 PDF 文档
+    const loadingTask = pdfjsLib.getDocument({ url: file });
+    const pdfDoc = await loadingTask.promise;
+    const numPages = pdfDoc.numPages;
+
+    const a4Width = 595; // A4 宽度，单位为像素
+    const a4Height = 842; // A4 高度，单位为像素
+    const pdf = new jsPDF({
+        orientation: 'p', // 'p' 表示纵向，'l' 表示横向
+        unit: 'px',
+        format: [a4Width, a4Height]
+    });
+
+    for (let i = 1; i <= numPages; i++) {
+        // 获取PDF页面
+        const page = await pdfDoc.getPage(i);
+        // 获取页面的尺寸
+        const viewport = page.getViewport({ scale: 1.0 });
+        const rotatePage = rotate[i - 1] || 0; // 获取旋转角度
+        const scale = Math.min((a4Width / viewport.width), (a4Height / viewport.height));
+        const scaledViewport = page.getViewport({ scale: scale });
+
+        // 创建一个画布以绘制页面
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // 根据旋转角度调整 canvas 尺寸
+        let newWidth, newHeight;
+        if (rotatePage === 90 || rotatePage === 270) {
+            newWidth = a4Height;
+            newHeight = a4Width;
+        } else {
+            newWidth = a4Width;
+            newHeight = a4Height;
+        }
+
+        /*
+        // 根据A4尺寸设置canvas大小
+        canvas.height = Math.round(scaledViewport.height);
+        canvas.width = Math.round(scaledViewport.width);
+
+        // 渲染页面到canvas
+        await page.render({
+            canvasContext: ctx,
+            viewport: scaledViewport
+        }).promise;
+
+        // 将canvas转换为图片
+        const imgData = canvas.toDataURL('image/png');
+
+        // 添加到jsPDF文档
+        pdf.addImage(imgData, 'PNG', 0, 0, scaledViewport.width, scaledViewport.height);
+
+        // 添加新页面
+        if (i < numPages) {
+            pdf.addPage();
+        }
+        */
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        // 保存当前的绘图状态
+        ctx.save();
+        // 移动画布到中心
+        ctx.translate(newWidth / 2, newHeight / 2);
+        // 旋转画布
+        ctx.rotate(rotatePage * Math.PI / 180);
+        // 移动回绘制的页面位置
+        ctx.translate(-viewport.width / 2, -viewport.height / 2);
+
+        // 渲染页面到 canvas
+        await page.render({
+            canvasContext: ctx,
+            viewport: page.getViewport({ scale: newWidth / viewport.width })
+        }).promise;
+
+        await page.render({
+            canvasContext: ctx,
+            viewport: scaledViewport
+        }).promise;
+        // 恢复之前的绘图状态
+        ctx.restore();
+
+        // 将 canvas 转换为图片
+        const imgData = canvas.toDataURL('image/png');
+
+        // 添加到 jsPDF 文档
+        pdf.addImage(imgData, 'PNG', 0, 0, scaledViewport.width, scaledViewport.height);
+
+        // 添加新页面
+        if (i < numPages) {
+            pdf.addPage();
+        }
+        // 清理
+        canvas.remove();
+    }
+
+    pdf.save('rotated_document.pdf');
 }
 
 export default Rotate
