@@ -7,11 +7,12 @@ import { downloadPdf } from '@/actions'
 
 type Props = {
     file: any,
+    fileName: string,
     setFile: any,
     setIsFileUpload: any,
 }
 
-const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
+const Rotate = ({ file, setFile, setIsFileUpload, fileName }: Props) => {
     const [scale, setScale] = useState(0.5)
     const [numPages, setNumPages] = useState<number>();
     const [rotate, setRotate] = useState<number[]>([])
@@ -119,7 +120,7 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
                 <div>
                     <Tooltips content='split and download PDF'>
                         <button className='p-2 mb-10 rounded border bg-orange-500'
-                            onClick={() => downloadPdf(file, rotate)}
+                            onClick={() => downloadPdf(file, rotate, fileName)}
                         >
                             <span className='text-white'>Download</span>
                         </button>

@@ -3,7 +3,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { jsPDF } from 'jspdf';
 
 
-export async function downloadPdf(file, rotate) {
+export async function downloadPdf(file, rotate,fileName) {
     // 加载 PDF 文档
     const pdfDoc = await pdfjsLib.getDocument({ url: file }).promise;
     const numPages = pdfDoc.numPages;
@@ -86,7 +86,7 @@ export async function downloadPdf(file, rotate) {
         // 如果不是第一页，添加新页面
         if(i > 0) {
             pdf.addPage([imgWidth, imgHeight], orientation);
-            console.log(i, imgWidth,imgHeight,orientation)
+            // console.log(i, imgWidth,imgHeight,orientation)
         }
 
         // 在页面上居中绘制图像
@@ -103,5 +103,6 @@ export async function downloadPdf(file, rotate) {
         pdf.deletePage(1)
 
     // 保存并下载 PDF
-    pdf.save('rotated_document.pdf');
+    const fileText="(pdf.ai-rotate by ShonH).pdf"
+    pdf.save(fileName+fileText);
 }

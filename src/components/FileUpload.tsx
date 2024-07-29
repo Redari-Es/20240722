@@ -1,17 +1,25 @@
 "use client"
 
+import { useState } from "react"
+
 
 type Props = {
     onFileUpload: any
-    setFile: any
+    setFile: any,
+    setFileName: any,
 }
-export default function FileUpload({ onFileUpload, setFile }: Props) {
+export default function FileUpload({ onFileUpload, setFile, setFileName }: Props) {
 
     const handleFileUpload = async (e: any) => {
         const file = e.target.files?.[0];
         if (file && file.type === 'application/pdf') {
             // 处理文件上传逻辑
             console.log('File uploaded:', file);
+            let fileName = file.name
+            let parts = fileName.split(".")
+            fileName = parts[0]
+            setFileName(fileName)
+            console.log(fileName)
             const reader = new FileReader();
             reader.onloadend = () => {
                 const pdf = (reader.result as string);

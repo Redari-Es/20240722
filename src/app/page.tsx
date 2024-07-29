@@ -9,6 +9,8 @@ export default function Home() {
   // 跟踪文件是否已上传显示工具
   const [isFileUploaded, setIsFileUploaded] = useState(false)
   const [file, setFile] = useState("")
+  const [fileName, setFileName] = useState("")
+
   const handleFileUpload = (file: File) => {
     setIsFileUploaded(true)
   }
@@ -24,7 +26,7 @@ export default function Home() {
         <span className="block md:text-center"> modified PDF.</span>
       </div>
       {/* 上传文件后显示工具 */}
-      {isFileUploaded ? <Rotate file={file} setFile={setFile} setIsFileUpload={setIsFileUploaded} /> : <FileUpload onFileUpload={handleFileUpload} setFile={setFile} />}
+      {isFileUploaded ? <Rotate file={file} setFile={setFile} setIsFileUpload={setIsFileUploaded} fileName={fileName} /> : <FileUpload onFileUpload={handleFileUpload} setFile={setFile} setFileName={setFileName} />}
 
     </>
   );
