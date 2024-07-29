@@ -17,7 +17,7 @@ export async function downloadPdf(file, rotate) {
         // 获取PDF页面
         const page = await pdfDoc.getPage(i);
         const originalViewport = page.getViewport({ scale: 1.0 });
-        const rotatePage = rotate[i - 1] || 0; // 获取旋转角度
+        const rotatePage = (rotate[i - 1] || 0)%360 // 获取旋转角度
 
         // 创建一个画布以绘制页面
         const canvas = document.createElement('canvas');

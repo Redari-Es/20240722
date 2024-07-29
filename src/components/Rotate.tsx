@@ -55,7 +55,7 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
     function rotatePage(pageNumber: number) {
         setRotate(prevRotate => {
             const newRotate = [...prevRotate];
-            newRotate[pageNumber - 1] = (newRotate[pageNumber - 1] + 90) % 360;
+            newRotate[pageNumber - 1] = (newRotate[pageNumber - 1] + 90);
             return newRotate;
         });
     }
@@ -68,7 +68,7 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
         setRotate(prevRotate => {
             // 使用 map 生成新的旋转数组，每个页面都相对于当前状态旋转90度
             const newRotate = prevRotate.map((currentRotation) => {
-                return (currentRotation + rotationIncrement) % 360;
+                return (currentRotation + rotationIncrement);
             });
             return newRotate;
         });
@@ -84,14 +84,14 @@ const Rotate = ({ file, setFile, setIsFileUpload }: Props) => {
                         <button className='p-2 rounded border bg-orange-500'
                             onClick={rotateAllPages}
                         >
-                            <span className='text-white text-nowrap'>Rotate all</span>
+                            <span className='text-white text-base text-nowrap'>Rotate all</span>
                         </button>
                     </Tooltips>
                     <Tooltips content='Remove this PDF and select a new one'>
                         <button className='p-2 rounded border bg-gray-900'
                             onClick={handleRemove}
                         >
-                            <span className='text-white text-nowrap'>Remove PDF</span>
+                            <span className='text-white text-base text-nowrap'>Remove PDF</span>
                         </button>
                     </Tooltips>
                     <div className={`${zoomInOpacity}`}>
