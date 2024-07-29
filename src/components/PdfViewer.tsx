@@ -2,6 +2,7 @@
 import { Divide, RefreshCw } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs, } from 'react-pdf'; // 导入 Document 和 Page 组件
+import { Toast } from './Toast';
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
     import.meta.url,
@@ -14,6 +15,8 @@ const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }) =
     const [showPages, setShowPages] = useState([]);
     const [pagesRendered, setPagesRendered] = useState<Boolean[]>([]);
     const [allPagesLoaded, setAllPagesLoaded] = useState(false);
+
+    const [errorMessage, setErroMessage] = useState('')
 
     // 监听文件变化，重新加载 PDF
     useEffect(() => {
@@ -111,6 +114,7 @@ const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }) =
                     </div>
                 }
             </Document >
+            {errorMessage && <Toast message={errorMessage} />}
         </div >
     );
 
