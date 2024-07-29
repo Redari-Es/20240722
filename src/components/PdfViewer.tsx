@@ -16,7 +16,6 @@ const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }) =
     const [pagesRendered, setPagesRendered] = useState<Boolean[]>([]);
     const [allPagesLoaded, setAllPagesLoaded] = useState(false);
 
-    const [errorMessage, setErroMessage] = useState('')
 
     // 监听文件变化，重新加载 PDF
     useEffect(() => {
@@ -114,7 +113,6 @@ const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }) =
                     </div>
                 }
             </Document >
-            {errorMessage && <Toast message={errorMessage} />}
         </div >
     );
 

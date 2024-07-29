@@ -1,6 +1,11 @@
 # 20240722
 ## 详细步骤说明
-> bun add @react-pdf/render
+### 安装包管理器
+> npm install -g bun
+> bun install
+> bun run dev
+访问[localhost](http://localhost:3000)
+
 ## 运行网页
 > bun dev
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

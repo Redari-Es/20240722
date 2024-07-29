@@ -1,7 +1,6 @@
 "use client"
 import FileUpload from "@/components/FileUpload";
 import Rotate from "@/components/Rotate";
-import Image from "next/image";
 import { useState } from "react";
 
 export default function Home() {
