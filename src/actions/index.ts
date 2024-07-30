@@ -2,8 +2,13 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import { jsPDF } from 'jspdf';
 
+type Props = {
+    file: any,
+    rotate:number[],
+    fileName:String,
+}
 
-export async function downloadPdf(file, rotate,fileName) {
+export async function downloadPdf({ file, rotate, fileName }:Props) {
     // 加载 PDF 文档
     const pdfDoc = await pdfjsLib.getDocument({ url: file }).promise;
     const numPages = pdfDoc.numPages;
@@ -21,7 +26,12 @@ export async function downloadPdf(file, rotate,fileName) {
 
         // 创建一个画布以绘制页面
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx:CanvasRenderingContext2D|null = canvas.getContext('2d');
+        // 确保 ctx 不是 null
+    if (ctx === null) {
+        console.error('Failed to get canvas 2D context.');
+        continue; // 跳过这个页面的处理
+    }
 
         // 根据旋转角度调整 canvas 尺寸
         let newWidth, newHeight;
@@ -62,7 +72,7 @@ export async function downloadPdf(file, rotate,fileName) {
         const imgData = canvas.toDataURL('image/png');
 
         // 根据页面内容的长宽选择A4纸张的方向
-        let orientation;
+        let orientation:any;
         let imgWidth, imgHeight;
         if (newWidth > newHeight) { // 页面内容较宽
             orientation = 'l'; // 横向

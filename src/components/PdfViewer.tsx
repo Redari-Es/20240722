@@ -1,16 +1,23 @@
 "use client"
-import { Divide, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs, } from 'react-pdf'; // 导入 Document 和 Page 组件
-import { Toast } from './Toast';
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
     import.meta.url,
 ).toString()
 
+type Props = {
+    file: any,
+    scale: any,
+    rotate: any,
+    rotatePage: any,
+    numPages: any,
+    setNumPages: any,
+}
 
 
-const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }) => {
+const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }: Props) => {
 
     const [showPages, setShowPages] = useState([]);
     const [pagesRendered, setPagesRendered] = useState<Boolean[]>([]);
@@ -31,7 +38,7 @@ const PdfViewer = ({ file, scale, rotate, rotatePage, numPages, setNumPages }) =
     }, [pagesRendered, allPagesLoaded]);
 
     // 当单个页面渲染成功时更新状态
-    function onPageRenderSuccess(pageIndex) {
+    function onPageRenderSuccess(pageIndex: number) {
         setPagesRendered(prevPagesRendered => {
             const newPagesRendered = [...prevPagesRendered];
             newPagesRendered[pageIndex - 1] = true; // 设置当前页面的状态为true

@@ -120,7 +120,7 @@ const Rotate = ({ file, setFile, setIsFileUpload, fileName }: Props) => {
                 <div>
                     <Tooltips content='split and download PDF'>
                         <button className='p-2 mb-10 rounded border bg-orange-500'
-                            onClick={() => downloadPdf(file, rotate, fileName)}
+                            onClick={() => downloadPdf({ file, rotate, fileName })}
                         >
                             <span className='text-white'>Download</span>
                         </button>
