@@ -1,8 +1,10 @@
 # 20240722
 ## 详细步骤说明
-### 安装包管理器
+### 安装bun
 > npm install -g bun
+### 安装依赖
 > bun install
+### 运行
 > bun run dev
 访问[localhost](http://localhost:3000)
 
